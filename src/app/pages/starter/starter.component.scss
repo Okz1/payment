@@ -1,0 +1,29 @@
+@import '~src/scss/colors';
+
+.starter {
+  margin: 50px auto 100px;
+  text-align: center;
+
+  &__section {
+    display: flex;
+    align-items: center;
+    align-content: center;
+  }
+
+  &__go {
+    display: inline-block;
+    margin: 0 auto;
+    padding: 10px 15px;
+    width: 100px;
+    background: $orange;
+    border: none;
+    border-radius: 15px;
+    transition: all .3s;
+    cursor: pointer;
+    color: $white;
+
+    &:hover {
+      opacity: .7;
+    }
+  }
+}

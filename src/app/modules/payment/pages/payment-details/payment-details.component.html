@@ -1,0 +1,87 @@
+<section class="payment" *ngIf="!loading; else loader">
+  <div class="payment__product-details">
+    <div class="payment__row">
+      <p class="payment__row__label">Product:</p>
+      <p class="payment__row__data">{{ productDetails.name }}</p>
+    </div>
+
+    <div class="payment__row">
+      <p class="payment__row__label">Date:</p>
+      <p class="payment__row__data">{{ productDetails.date | date : 'short' }}</p>
+    </div>
+
+    <div class="payment__row">
+      <p class="payment__row__label">Amount:</p>
+      <p class="payment__row__data">{{ productDetails.amount | currency }}</p>
+    </div>
+  </div>
+  
+  <form class="payment__details" [formGroup]="paymentForm" *ngIf="!paymentResponse; else paymentResponseDetails">
+    <div class="payment__row payment__row--cards payment__row--card-type">
+      <label for="card-type" class="payment__row__label payment__row__label--cards">Card Types:</label>
+      <p-dropdown id="card-type"
+                  placeholder="Select a Card"
+                  formControlName="cardType" [options]="cardTypes" optionLabel="value"
+                  optionValue="id"></p-dropdown>
+    </div>
+  
+    <div class="payment__row payment__row--cards">
+      <label for="card-number" class="payment__row__label payment__row__label--cards">Card Number:</label>
+      <p-inputMask id="card-number"
+                   formControlName="cardNumber"
+                   [mask]="cardNumberMask"
+                   [placeholder]="cardNumberMask">
+      </p-inputMask>
+    </div>
+  
+    <div class="payment__row payment__row--cards payment__row--expiry">
+      <label for="card-expire" class="payment__row__label payment__row__label--cards">Expiry:</label>
+      <p-inputMask id="card-expire"
+                   formControlName="expiry"
+                   mask="99/99"
+                   placeholder="MM/YY">
+      </p-inputMask>
+    </div>
+  
+    <div class="payment__row payment__row--cards">
+      <label for="card-name" class="payment__row__label payment__row__label--cards">Name:</label>
+      <input id="card-name" pInputText type="text" formControlName="cardHolderName">
+    </div>
+  
+    <div class="payment__row payment__row--cards">
+      <label for="card-email" class="payment__row__label payment__row__label--cards">Email:</label>
+      <input id="card-email" pInputText type="email" formControlName="email">
+    </div>
+    
+    <button
+      (click)="submitPayment()"
+      [ngClass]="{'payment__submit--active': paymentForm.valid }"
+      class="payment__submit">Confirm Payment</button>
+
+  </form>
+  
+  <ng-template #paymentResponseDetails>
+    <div class="payment__response">
+      <div class="payment__row" [ngClass]="{
+        'payment__row--error': PaymentInvoiceStatusesEnum.Fail === paymentResponse.responseCode,
+        'payment__row--success': PaymentInvoiceStatusesEnum.Success === paymentResponse.responseCode}" >
+        <p class="payment__row__label">Payment details:</p>
+        <p class="payment__row__data">{{ paymentResponse.responseMessage }}</p>
+      </div>
+
+      <div [ngClass]="{
+        'payment__row--error': PaymentInvoiceStatusesEnum.Fail === paymentResponse.responseCode,
+        'payment__row--success': PaymentInvoiceStatusesEnum.Success === paymentResponse.responseCode}"
+         class="payment__row"
+         *ngIf="paymentResponse.invoiceNo">
+        <p class="payment__row__label">Invoice:</p>
+        <p class="payment__row__data">{{ paymentResponse.invoiceNo }}</p>
+      </div>
+
+    </div>
+  </ng-template>
+</section>
+
+<ng-template #loader>
+</ng-template>
+
